@@ -47,6 +47,9 @@ namespace ApiSwitchingIssue
             _apis = ((GraphicsBackend[])Enum.GetValues(typeof(GraphicsBackend))).Where(x => !apisExcluded.Contains(x) && GraphicsDevice.IsBackendSupported(x)).ToList();
 
             _apiIndex = 0;
+
+            Console.WriteLine("APIs selected to iterate between:");
+            _apis.ForEach(x => Console.WriteLine(x.ToString()));
         }
 
         private void Init()
@@ -80,7 +83,7 @@ namespace ApiSwitchingIssue
             _factory = new DisposeCollectorResourceFactory(_device.ResourceFactory);
             _cl = _factory.CreateCommandList();
 
-            //ERROR on change from OpenGL to Vulkan     
+            //ERROR on change from OpenGL to Vulkan (in WINDOWs during my testing)     
             //With debug : false -> it is a memory access violation
             //With debug : true -> it is Veldrid.VeldridException. HResult = 0x80131500. Message = A Vulkan validation error was encountered: [ErrorEXT](SwapchainKHREXT) vkCreateSwapchainKHR: internal drawable creation failed
         }
@@ -115,9 +118,9 @@ namespace ApiSwitchingIssue
 
                 var nextAPI = _apis[_apiIndex].ToString();
 
-                System.Diagnostics.Debug.WriteLine(string.Concat("Trying to switch from ", currentAPI, " to ", nextAPI));
+                Console.WriteLine(string.Concat("Trying to switch from ", currentAPI, " to ", nextAPI));
                 ReCreateGraphicsDevice();
-                System.Diagnostics.Debug.WriteLine("Success!");
+                Console.WriteLine("Success!");
             }
         }
 
